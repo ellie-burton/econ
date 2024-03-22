@@ -1,21 +1,64 @@
 const scenarios = [
   {
+    num: 1,
     title: "Scenario 1",
-    description: "Description of Scenario 1...",
-    MainWheel: { percentBlue: 30, percentRed: 70 },
+    description: "The room contains urns that are either blue or red. There are b blue urns in the room and there are r=10-b red urns in the room. ",
+    MainWheel: { percentBlue: 30, percentRed: 60 },
     RedWheel: { percentA: 10, percentB: 30 },
     BlueWheel: { percentA: 30, percentB: 40 },
   },
   {
+    num: 2,
     title: "Scenario 2",
     description: "Description of Scenario 2...",
+    MainWheel: { percentBlue: 20, percentRed: 40 },
+    RedWheel: { percentA: 10, percentB: 30 },
+    BlueWheel: { percentA: 30, percentB: 40 },
+  },
+  {
+    num: 3,
+    title: "Scenario 3",
+    description: "Description of Scenario 3...",
+    MainWheel: { percentBlue: 75, percentRed: 10 },
+    RedWheel: { percentA: 10, percentB: 30 },
+    BlueWheel: { percentA: 30, percentB: 40 },
+  },
+  {
+    num: 4,
+    title: "Scenario 4",
+    description: "Description of Scenario 4...",
+    MainWheel: { percentBlue: 15, percentRed: 15 },
+    RedWheel: { percentA: 10, percentB: 30 },
+    BlueWheel: { percentA: 30, percentB: 40 },
+  },
+  {
+    num: 5,
+    title: "Scenario 5",
+    description: "Description of Scenario 5...",
     MainWheel: { percentBlue: 30, percentRed: 70 },
     RedWheel: { percentA: 10, percentB: 30 },
     BlueWheel: { percentA: 30, percentB: 40 },
   },
   {
-    title: "Scenario 3",
-    description: "Description of Scenario 3...",
+    num: 6,
+    title: "Scenario 6",
+    description: "Description of Scenario 6...",
+    MainWheel: { percentBlue: 30, percentRed: 70 },
+    RedWheel: { percentA: 10, percentB: 30 },
+    BlueWheel: { percentA: 30, percentB: 40 },
+  },
+  {
+    num: 7,
+    title: "Scenario 7",
+    description: "Description of Scenario 7...",
+    MainWheel: { percentBlue: 30, percentRed: 70 },
+    RedWheel: { percentA: 10, percentB: 30 },
+    BlueWheel: { percentA: 30, percentB: 40 },
+  },
+  {
+    num: 8,
+    title: "Scenario 8",
+    description: "Description of Scenario 8...",
     MainWheel: { percentBlue: 30, percentRed: 70 },
     RedWheel: { percentA: 10, percentB: 30 },
     BlueWheel: { percentA: 30, percentB: 40 },
@@ -63,6 +106,40 @@ document.getElementById("back").addEventListener("click", backInstruction);
 function showScenario(scenario, index) {
   const scenarioDiv = document.getElementById("scenario");
   scenarioDiv.innerHTML = `<h2>${scenario.title}</h2><p>${scenario.description}</p>`;
+
+  
+  //pie
+  //create the main wheel
+  //main wheel at index 0
+  const MainWheelData = scenarios[index].MainWheel;
+  console.log(MainWheelData);
+  const xValuesMain = ["Blue", "Red", "Unknown"];
+  const yValuesMain = [MainWheelData.percentBlue, MainWheelData.percentRed, 100-MainWheelData.percentBlue-MainWheelData.percentRed];
+  const barColorsMain = [
+    "blue",
+    "red",
+    "gray",
+  ];
+  document.getElementById("mainChart").innerHTML = "";
+
+  new Chart("mainChart", {
+    type: "pie",
+    data: {
+      labels: xValuesMain,
+      datasets: [{
+        backgroundColor: barColorsMain,
+        data: yValuesMain
+      }]
+    },
+    options: {
+      title: {
+        display: true,
+        text: "Main Wheel Distribution"
+      }
+    }
+  });
+  
+
 }
 
 function generatePaginationButtons() {
@@ -85,9 +162,6 @@ function generatePaginationButtons() {
 
   pagination.appendChild(row);
 }
-
-
-
 
 
 showScenario(scenarios[0], 0);

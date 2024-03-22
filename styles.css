@@ -34,7 +34,7 @@ body {
 
 
 .logo {
-    max-height: 100px; /* Adjust the maximum width of the logo */
+    max-height: 90px; /* Adjust the maximum width of the logo */
     width: auto;
     margin-right: 50px; /* Adjust spacing around the logo */
 }
