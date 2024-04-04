@@ -80,34 +80,66 @@ const instructions = [
   },
 ];
 let currentStep = 0;
+let myChart = null;
 
-function nextInstruction() {
-  currentStep++;
-  if (currentStep >= instructions.length) {
-    currentStep = instructions.length - 1;
+// Additions and modifications to your existing script.js for modal handling
+document.addEventListener("DOMContentLoaded", function() {
+  const instructionModal = document.getElementById("instructionModal");
+  const viewInstructionsBtn = document.getElementById("viewInstructionsBtn");
+  let currentStep = 0;
+
+  function updateInstructionText() {
+    const instructionDiv = document.getElementById("instructions");
+    instructionDiv.innerHTML = `<p>${instructions[currentStep].text}</p>`;
   }
-  const instructionDiv = document.getElementById("instructions");
-  instructionDiv.innerHTML = `<p>${instructions[currentStep].text}</p>`;
-}
 
-function backInstruction() {
-  currentStep--;
-  if (currentStep < 0) {
+  function nextInstruction() {
+    currentStep++;
+    if (currentStep >= instructions.length) {
+      // Once all instructions are viewed, hide modal and show "View Instructions" button
+      instructionModal.style.display = "none";
+      viewInstructionsBtn.style.display = "block";
+      currentStep = instructions.length - 1; // Ensure step doesn't exceed bounds
+    }
+    updateInstructionText();
+  }
+
+  function backInstruction() {
+    currentStep--;
+    if (currentStep < 0) {
+      currentStep = 0;
+    }
+    updateInstructionText();
+  }
+
+  // Initial instruction text update
+  updateInstructionText();
+
+  // Event listeners for instruction navigation
+  document.getElementById("continue").addEventListener("click", nextInstruction);
+  document.getElementById("back").addEventListener("click", backInstruction);
+
+  // Closing the modal manually (via the close button or outside click)
+  document.getElementById("closeModal").addEventListener("click", function() {
+    instructionModal.style.display = "none";
+    viewInstructionsBtn.style.display = "block";
+  });
+
+  // Reopening the modal with the "View Instructions" button
+  viewInstructionsBtn.addEventListener("click", function() {
     currentStep = 0;
-  }
-  const instructionDiv = document.getElementById("instructions");
-  instructionDiv.innerHTML = `<p>${instructions[currentStep].text}</p>`;
-}
+    instructionModal.style.display = "block";
+    viewInstructionsBtn.style.display = "none";
+  });
 
-// When button "continue" is clicked, next instruction is shown
-document.getElementById("continue").addEventListener("click", nextInstruction);
-document.getElementById("back").addEventListener("click", backInstruction);
-
+  // Existing functionality to display scenarios, etc.
+  // Ensure to integrate or refactor existing functions as needed
+  
 function showScenario(scenario, index) {
   const scenarioDiv = document.getElementById("scenario");
   scenarioDiv.innerHTML = `<h2>${scenario.title}</h2><p>${scenario.description}</p>`;
 
-  
+  //ksjbckjqwc
   //pie
   //create the main wheel
   //main wheel at index 0
@@ -120,27 +152,59 @@ function showScenario(scenario, index) {
     "red",
     "gray",
   ];
+
+  //change to dynamically generate 100 slices based on percentages:
+  var blueCount =MainWheelData.percentBlue;
+  var redCount = MainWheelData.percentRed;
+  var unknownCount = 100 - blueCount - redCount;
+  const xValuesMainDynamic = [];
+  const yValuesMainDynamic = [];
+  const barColorsMainDynamic = [];
+  for (var i = 0; i < blueCount; i++) {
+    xValuesMainDynamic.push("Blue");
+    yValuesMainDynamic.push(1);
+    barColorsMainDynamic.push("blue");
+  }
+  for (var i = 0; i < redCount; i++) {
+    xValuesMainDynamic.push("Red");
+    yValuesMainDynamic.push(1);
+    barColorsMainDynamic.push("red");
+  }
+  for (var i = 0; i < unknownCount; i++) {
+    xValuesMainDynamic.push("Unknown");
+    yValuesMainDynamic.push(1);
+    barColorsMainDynamic.push("gray");
+  }
+  
   document.getElementById("mainChart").innerHTML = "";
 
-  new Chart("mainChart", {
+  myChart = new Chart("mainChart", {
     type: "pie",
     data: {
-      labels: xValuesMain,
+      labels: xValuesMainDynamic,
       datasets: [{
-        backgroundColor: barColorsMain,
-        data: yValuesMain
-      }]
+        backgroundColor: barColorsMainDynamic,
+        color: barColorsMainDynamic,
+        data: yValuesMainDynamic,
+        borderWidth: 0, // Ensure no border is added between slices
+    }]
+      
     },
     options: {
       title: {
+        
         display: true,
         text: "Main Wheel Distribution"
-      }
+      },
     }
+    
   });
   
 
 }
+Chart.defaults.global.tooltips.enabled = false;
+Chart.defaults.global.legend.display = false;
+Chart.defaults.global.hover.enabled = false;
 
 function generatePaginationButtons() {
   const pagination = document.getElementById("pagination");
@@ -162,6 +226,57 @@ function generatePaginationButtons() {
 
   pagination.appendChild(row);
 }
+function lightenColor(color) {
+  //lighten color by percent
+  if (color == "gray" ){
+    return "lightgray";
+  }
+  else if (color == "blue"){
+    return "lightblue";
+  }
+  else if (color == "red"){
+    return "lightcoral";
+  }
+  else{
+    return "lightgray";
+  }
+  
+}
+function spinChart() {
+  const totalSlices = 100;
+  let currentSlice = Math.floor(Math.random() * totalSlices); // Start at a random slice
+  const spinDuration = 3000; // 3 seconds in milliseconds
+  const intervalDuration = 100; // Slower interval to make changes more noticeable
+  let spinCounter = spinDuration / intervalDuration; // Determine how many times to switch slices
+
+  const originalColors = myChart.data.datasets[0].color.slice(); // Clone the original colors
+
+  // Function to reset slice colors
+  function resetSliceColors() {
+      for (let i = 0; i < totalSlices; i++) {
+          myChart.data.datasets[0].color[i] = originalColors[i];
+      }
+  }
+
+  const intervalId = setInterval(() => {
+      resetSliceColors(); // Reset all slices to their original colors
+
+      // Lighten the current slice and potentially adjacent slices for visibility
+      //myChart.data.datasets[0].backgroundColor[currentSlice] = lightenColor(originalColors[currentSlice]);
+      myChart.data.datasets[0].color[currentSlice] = "white";
+      myChart.update();
+
+      // Move to a new random slice
+      currentSlice = Math.floor(Math.random() * totalSlices);
+      spinCounter--;
+
+      if (spinCounter <= 0) {
+          clearInterval(intervalId); // Stop spinning
+          resetSliceColors(); // Optionally reset all colors or highlight the selected slice
+          myChart.update();
+      }
+  }, intervalDuration);
+}
 
 
 showScenario(scenarios[0], 0);
@@ -169,3 +284,7 @@ showScenario(scenarios[0], 0);
 const instructionDiv = document.getElementById("instructions");
 instructionDiv.innerHTML = `<p>${instructions[0].text}</p>`;
 generatePaginationButtons();
+document.getElementById("spinBtn").addEventListener("click", spinChart);
+
+
+});

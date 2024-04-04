@@ -15,27 +15,27 @@
         <img src="./images/ua.png" alt="UA" id="logo" style="max-height: 50px;">
         <img src="./images/econ.png" alt="Logo" id="logo" style="max-height: 50px;">
     </header>
-        <div class="row">
-            <div class="col-6">
-                <div class="mt-4">
-                    <br/><br/><br/><br/>
-                    <div class="container">
-                    <h1>Welcome!</h1>
-                    <div id="instructions">
-                        <p>Instructions at level x</p>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <button type="button" class="btn btn-primary" id="back">Back</button>
-                        </div>
-                        <div class="col">
-                            <button type="button" class="btn btn-primary" id="continue">Continue</button>
-                        </div>
-                    </div>
+
+
+    <div class="modal" id="instructionModal" style="display:block;"> <!-- Modal starts visible -->
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Instructions</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModal"></button>
+                </div>
+                <div class="modal-body" id="instructions">
+                    <!-- Instructions will be injected here by script.js -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="back">Back</button>
+                    <button type="button" class="btn btn-primary" id="continue">Continue</button>
                 </div>
             </div>
         </div>
-            <div class="col-6">
+    </div>
+
+    <button type="button" class="btn btn-info" id="viewInstructionsBtn" style="display:none;">View Instructions</button> <!-- Initially hidden -->
                 <div class="mt-4">
                     <br/><br/><br/><br/>
                     <div class="container">
@@ -45,13 +45,14 @@
                         
                     </div>
                     <canvas id="mainChart" width="100" height="100"></canvas>
+                    <button type="button" class="btn btn-primary" id="spinBtn">Spin</button>
+
                     <div id="pagination">
                         <!-- Pagination numbers will be generated dynamically -->
                     </div>
                 </div>
             </div>
-        </div>
-        </div>
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"> </script>
 
     <script src="script.js"></script>
