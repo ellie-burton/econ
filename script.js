@@ -300,16 +300,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function generatePaginationButtons() {
     const pagination = document.getElementById("pagination");
-    pagination.innerHTML = ""; // Clear existing buttons
-    pagination.appendChild(document.createElement("br")); // Add a line break for spacing
-    pagination.appendChild(document.createElement("br")); // Add a line break for spacing
-    pagination.appendChild(document.createElement("br")); // Add a line break for spacing
-    pagination.appendChild(document.createElement("br")); // Add a line break for spacing
+    pagination.innerHTML = ""; 
+    pagination.appendChild(document.createElement("br")); 
+    pagination.appendChild(document.createElement("br")); 
+    pagination.appendChild(document.createElement("br")); 
+    pagination.appendChild(document.createElement("br")); 
 
     scenarios.forEach((scenario, index) => {
       const button = document.createElement("button");
       button.textContent = index + 1;
-      button.classList.add("btn", "btn-primary", "mb-2"); // Add Bootstrap button classes, including margin-bottom
+      button.classList.add("btn", "btn-primary", "mb-2"); 
       button.addEventListener("click", () => showScenario(scenario, index));
 
       pagination.appendChild(button);
@@ -317,7 +317,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function lightenColor(color) {
-    //lighten color by percent
     if (color == "gray") {
       return "lightgray";
     } else if (color == "blue") {
@@ -329,25 +328,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
   let originalBackgroundColors = [];
-  let originalBorderWidth = 0; // Assuming a single value for simplicity
 
   // Function to store the original state of the chart
   function storeOriginalChartState() {
     originalBackgroundColors =
       mainChart.data.datasets[0].backgroundColor.slice(); // Clone the original backgroundColors
-    originalBorderWidth = mainChart.data.datasets[0].borderWidth; // Store the original borderWidth
   }
 
   // Function to reset the chart to its original state
   function resetChartToOriginalState() {
     mainChart.data.datasets[0].backgroundColor =
       originalBackgroundColors.slice(); // Reset to original backgroundColors
-    mainChart.data.datasets[0].borderWidth = originalBorderWidth; // Reset to original borderWidth
     mainChart.update();
-  }
-
-  function spinChart() {
-    resetChartToOriginalState(); // Reset chart to original state at the start
     var leftArrow = document.getElementById("arrow-left");
     if (leftArrow) {
       leftArrow.style.fill = "black";
@@ -360,6 +352,10 @@ document.addEventListener("DOMContentLoaded", function () {
     if (qMark) {
       qMark.style.fill = "white";
     }
+  }
+
+  function spinChart() {
+    resetChartToOriginalState(); // Reset chart to original state at the start
     const totalSlices = 100;
     let previousSlice = -1; // Track the previous slice
     const spinDuration = 3000; // Total duration for the spin
@@ -386,7 +382,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       mainChart.update();
 
-      previousSlice = currentSlice; // Update the previous slice tracker
+      previousSlice = currentSlice; 
       elapsedTime += flashDuration;
 
       if (elapsedTime >= spinDuration) {
@@ -417,7 +413,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }, flashDuration); // Run this interval every 3ms
   }
 
-  // Ensure the original state is stored and the chart is reset before the first spin
 
   var slider = document.getElementById("myRange");
   var output = document.getElementById("demo");
@@ -427,10 +422,8 @@ document.addEventListener("DOMContentLoaded", function () {
   slider.oninput = function () {
     output.innerHTML = this.value;
   };
-  // Remember to call storeOriginalChartState() after the chart is initially created and populated with data
 
   showScenario(scenarios[0], 0);
-  //start with instructions at step 0
   const instructionDiv = document.getElementById("instructions");
   instructionDiv.innerHTML = `<p>${instructions[0].text}</p>`;
   generatePaginationButtons();
