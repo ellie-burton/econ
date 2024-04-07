@@ -68,10 +68,10 @@ const instructions = [
   },
   {
     step: 2,
-    text:"Part II of the experiment is comprised of two tasks.  In each of these tasks, you will have the opportunity to earn additional money up to $YYY.  Earnings for Part II of the experiment will depend upon your choices and chance.",
+    text: "Part II of the experiment is comprised of two tasks.  In each of these tasks, you will have the opportunity to earn additional money up to $YYY.  Earnings for Part II of the experiment will depend upon your choices and chance.",
   },
   {
-    step:3,
+    step: 3,
     text: "  Part III of the experiment is a short questionnaire.  You will receive a flat fee of $ZZZ for completing the questionnaire.  Your total earnings for the experiment will be determined by adding your earnings from each of the three parts of the experiment.  You will receive your total payment at the end of the session.",
   },
   {
@@ -79,6 +79,7 @@ const instructions = [
     text: "Consider the following uncertain prospect. Note that this uncertain prospect involves monetary prizes. If (i) as a result of your choice below and chance, you end up with this uncertain prospect and (ii) this round is chosen for payment at the end of the experiment, the amount of the prize will be added to your overall payment for participating in the experiment. ",
   },
 ];
+
 let currentStep = 0;
 let mainChart = null;
 let redChart = null;
@@ -141,8 +142,16 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("blueChart").innerHTML = "";
     document.getElementById("redChart").innerHTML = "";
     const scenarioDiv = document.getElementById("scenario");
-    scenarioDiv.innerHTML=``;
-    scenarioDiv.innerHTML = `<h2>${scenario.title}</h2><p>The room contains 100 urns that are either blue or red. You know there are ${scenario.MainWheel.percentBlue} blue urns in the room and there are ${scenario.MainWheel.percentRed} red urns in the room, leaving ${100-scenario.MainWheel.percentRed-scenario.MainWheel.percentBlue} urns of unknown color. The figure below shows these proportions. Based on which color urn is randomly selected, you will proceed to the red or blue urn in stage 2. Click the "spin" button to simulate this.</p>`;
+    scenarioDiv.innerHTML = ``;
+    scenarioDiv.innerHTML = `<h2>${
+      scenario.title
+    }</h2><p>The room contains 100 urns that are either blue or red. You know there are <b>${
+      scenario.MainWheel.percentBlue
+    }</b> blue urns in the room and there are <b>${
+      scenario.MainWheel.percentRed
+    }</b> red urns in the room, leaving <b>${
+      100 - scenario.MainWheel.percentRed - scenario.MainWheel.percentBlue
+    }</b> urns of unknown color. The figure below shows these proportions. Based on which color urn is randomly selected, you will proceed to the red or blue urn in stage 2. Click the "spin" button to simulate this.</p>`;
 
     const MainWheelData = scenarios[index].MainWheel;
 
@@ -185,7 +194,8 @@ document.addEventListener("DOMContentLoaded", function () {
       options: {
         title: {
           display: true,
-          text: "Main Wheel Distribution",
+          text: "Urn Distribution",
+          fontSize: 24,
         },
       },
     });
@@ -231,9 +241,9 @@ document.addEventListener("DOMContentLoaded", function () {
       options: {
         title: {
           display: true,
-          fontColor: 'blue',
-          text: "Blue Wheel Distribution",
-
+          fontColor: "blue",
+          text: "Blue Urn",
+          fontSize: 18,
         },
       },
     });
@@ -277,8 +287,9 @@ document.addEventListener("DOMContentLoaded", function () {
       options: {
         title: {
           display: true,
-          text: "Red Wheel Distribution",
+          text: "Red Urn",
           fontColor: "darkred",
+          fontSize: 18,
         },
       },
     });
@@ -295,17 +306,16 @@ document.addEventListener("DOMContentLoaded", function () {
     pagination.appendChild(document.createElement("br")); // Add a line break for spacing
     pagination.appendChild(document.createElement("br")); // Add a line break for spacing
 
-  
     scenarios.forEach((scenario, index) => {
       const button = document.createElement("button");
       button.textContent = index + 1;
       button.classList.add("btn", "btn-primary", "mb-2"); // Add Bootstrap button classes, including margin-bottom
       button.addEventListener("click", () => showScenario(scenario, index));
-  
+
       pagination.appendChild(button);
     });
   }
-  
+
   function lightenColor(color) {
     //lighten color by percent
     if (color == "gray") {
@@ -319,55 +329,60 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
   let originalBackgroundColors = [];
-let originalBorderWidth = 0; // Assuming a single value for simplicity
+  let originalBorderWidth = 0; // Assuming a single value for simplicity
 
-// Function to store the original state of the chart
-function storeOriginalChartState() {
-    originalBackgroundColors = mainChart.data.datasets[0].backgroundColor.slice(); // Clone the original backgroundColors
+  // Function to store the original state of the chart
+  function storeOriginalChartState() {
+    originalBackgroundColors =
+      mainChart.data.datasets[0].backgroundColor.slice(); // Clone the original backgroundColors
     originalBorderWidth = mainChart.data.datasets[0].borderWidth; // Store the original borderWidth
-}
+  }
 
-// Function to reset the chart to its original state
-function resetChartToOriginalState() {
-    mainChart.data.datasets[0].backgroundColor = originalBackgroundColors.slice(); // Reset to original backgroundColors
+  // Function to reset the chart to its original state
+  function resetChartToOriginalState() {
+    mainChart.data.datasets[0].backgroundColor =
+      originalBackgroundColors.slice(); // Reset to original backgroundColors
     mainChart.data.datasets[0].borderWidth = originalBorderWidth; // Reset to original borderWidth
     mainChart.update();
-}
+  }
 
-function spinChart() {
-  resetChartToOriginalState(); // Reset chart to original state at the start
-  var leftArrow = document.getElementById("arrow-left");
-            if (leftArrow) {
-                leftArrow.style.fill = "black";
-            }
-            var rightArrow = document.getElementById("arrow-right");
-            if (rightArrow) {
-                rightArrow.style.fill = "black";
-            }
-            var qMark = document.getElementById("qmark");
-            if (qMark) {
-                qMark.style.fill = "white";
-            }
-  const totalSlices = 100;
-  let previousSlice = -1; // Track the previous slice
-  const spinDuration = 3000; // Total duration for the spin
-  const flashDuration = 100; // Duration each slice is highlighted
-  let elapsedTime = 0; // Track elapsed time
+  function spinChart() {
+    resetChartToOriginalState(); // Reset chart to original state at the start
+    var leftArrow = document.getElementById("arrow-left");
+    if (leftArrow) {
+      leftArrow.style.fill = "black";
+    }
+    var rightArrow = document.getElementById("arrow-right");
+    if (rightArrow) {
+      rightArrow.style.fill = "black";
+    }
+    var qMark = document.getElementById("qmark");
+    if (qMark) {
+      qMark.style.fill = "white";
+    }
+    const totalSlices = 100;
+    let previousSlice = -1; // Track the previous slice
+    const spinDuration = 3000; // Total duration for the spin
+    const flashDuration = 100; // Duration each slice is highlighted
+    let elapsedTime = 0; // Track elapsed time
 
-  const intervalId = setInterval(() => {
-      if(previousSlice >= 0) {
-          // Reset the previous slice immediately
-          mainChart.data.datasets[0].backgroundColor[previousSlice] = originalBackgroundColors[previousSlice];
+    const intervalId = setInterval(() => {
+      if (previousSlice >= 0) {
+        // Reset the previous slice immediately
+        mainChart.data.datasets[0].backgroundColor[previousSlice] =
+          originalBackgroundColors[previousSlice];
       }
 
       // Calculate the current slice; ensure it's different from the previous one
       let currentSlice;
       do {
-          currentSlice = Math.floor(Math.random() * totalSlices);
-      } while(currentSlice === previousSlice);
+        currentSlice = Math.floor(Math.random() * totalSlices);
+      } while (currentSlice === previousSlice);
 
       // Highlight the current slice
-      mainChart.data.datasets[0].backgroundColor[currentSlice] = lightenColor(mainChart.data.datasets[0].backgroundColor[currentSlice]);
+      mainChart.data.datasets[0].backgroundColor[currentSlice] = lightenColor(
+        mainChart.data.datasets[0].backgroundColor[currentSlice]
+      );
 
       mainChart.update();
 
@@ -375,55 +390,44 @@ function spinChart() {
       elapsedTime += flashDuration;
 
       if (elapsedTime >= spinDuration) {
-          clearInterval(intervalId); // Stop spinning
-          //if red, go to red chart, if blue, go to blue chart
-          if (mainChart.data.labels[currentSlice] == "Red") {
-            console.log("red");
-            //highlight right arrow "Arrow-Down-Right"
-            var rightArrow = document.getElementById("arrow-right");
-            var leftArrow = document.getElementById("arrow-left");
-
-            if (rightArrow) {
-                rightArrow.style.fill = 'crimson';
-                leftArrow.style.fill = "white";
-            }
-            else{
-                console.log("right arrow not found");
-            }
-
+        clearInterval(intervalId); // Stop spinning
+        var qMark = document.getElementById("qmark");
+        var leftArrow = document.getElementById("arrow-left");
+        var rightArrow = document.getElementById("arrow-right");
+        //if red, go to red chart, if blue, go to blue chart
+        if (mainChart.data.labels[currentSlice] == "Red") {
+          //highlight right arrow "Arrow-Down-Right"
+          if (rightArrow) {
+            rightArrow.style.fill = "crimson";
+            leftArrow.style.fill = "white";
+          }
         } else if (mainChart.data.labels[currentSlice] == "Blue") {
-            console.log("blue");
-            var leftArrow = document.getElementById("arrow-left");
-            var rightArrow = document.getElementById("arrow-right");
-
-            if (leftArrow) {
-                leftArrow.style.fill = "blue";
-                rightArrow.style.fill = "white";
-            }
-            else{
-                console.log("left arrow not found");
-            }
-        }
-        else{
-            console.log("unknown");
-            var qMark = document.getElementById("qmark");
-            if (qMark) {
-                qMark.style.fill = "black";
-            }
-            else{
-                console.log("question mark not found");
-            }
-        
+          if (leftArrow) {
+            leftArrow.style.fill = "blue";
+            rightArrow.style.fill = "white";
+          }
+        } else {
+          if (qMark) {
+            qMark.style.fill = "black";
+            rightArrow.style.fill = "gray";
+            leftArrow.style.fill = "gray";
+          }
         }
       }
-  }, flashDuration); // Run this interval every 3ms
-}
+    }, flashDuration); // Run this interval every 3ms
+  }
 
-// Ensure the original state is stored and the chart is reset before the first spin
+  // Ensure the original state is stored and the chart is reset before the first spin
 
+  var slider = document.getElementById("myRange");
+  var output = document.getElementById("demo");
+  output.innerHTML = slider.value; // Display the default slider value
 
-// Remember to call storeOriginalChartState() after the chart is initially created and populated with data
-
+  // Update the current slider value (each time you drag the slider handle)
+  slider.oninput = function () {
+    output.innerHTML = this.value;
+  };
+  // Remember to call storeOriginalChartState() after the chart is initially created and populated with data
 
   showScenario(scenarios[0], 0);
   //start with instructions at step 0
